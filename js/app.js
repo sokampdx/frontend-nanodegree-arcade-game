@@ -4,6 +4,8 @@ var init_x = 0;
 var init_y = 50.5;
 var step_x = 101;
 var step_y = 85.5;
+var board_x = 505;
+var board_y = 606;
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -11,7 +13,7 @@ var Enemy = function() {
     // we've provided one for you to get started
     this.x = init_x;
     this.y = init_y + step_y;
-
+    this.speed = 1;
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
@@ -23,6 +25,10 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    if (this.x >= board_x) {
+        this.x = -step_x;
+    }
+    this.x += this.speed * step_x * dt;
 };
 
 // Draw the enemy on the screen, required method for game
