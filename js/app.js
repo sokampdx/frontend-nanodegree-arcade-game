@@ -48,11 +48,38 @@ var Player = function() {
 }
 
 Player.prototype.update = function(dt) {
-
+    if (this.y < 0 || this.y > init_y + step_y * 4) {
+        this.y = init_y + step_y * 4;
+    }
+    if (this.x <= 0) {
+        this.x = 0;
+    }
+    if (this.x >= board_x) {
+        this.x = step_x * 4;
+    }
 };
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Player.prototype.handleInput = function(key_press) {
+    switch(key_press) {
+        case 'left':
+            this.x -= step_x;
+            break;
+        case 'right':
+            this.x += step_x;
+            break;
+        case 'up':
+            this.y -= step_y;
+            break;
+        case 'down':
+            this.y += step_y;
+            break;
+        default:
+            ;
+    }
 };
 
 // Now instantiate your objects.
@@ -73,5 +100,5 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-//    player.handleInput(allowedKeys[e.keyCode]);
+    player.handleInput(allowedKeys[e.keyCode]);
 });
