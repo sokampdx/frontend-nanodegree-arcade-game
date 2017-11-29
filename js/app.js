@@ -1,7 +1,16 @@
+
+// Step related
+var init_x = 0;
+var init_y = 50.5;
+var step_x = 101;
+var step_y = 85.5;
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
+    this.x = init_x;
+    this.y = init_y + step_y;
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -26,12 +35,20 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 
 var Player = function() {
+    this.x = init_x + step_x * 2;
+    this.y = init_y + step_y * 4;
 
+    this.sprite = 'images/char-boy.png';
 }
 
 Player.prototype.update = function(dt) {
 
 };
+
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
