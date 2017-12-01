@@ -12,32 +12,30 @@ var delta = init_y;
 
 // Enemies our player must avoid
 var Enemy = function(level) {
-    init_enemy_position(this);
+    this.init_enemy_position();
     this.speed = level;
     this.sprite = 'images/enemy-bug.png';
 };
 
-var init_enemy_position = function(enemy) {
+Enemy.prototype.init_enemy_position = function() {
     rand_seed = Math.round(Math.random() * 3 - 0.5);
-    console.log(rand_seed);
-    enemy.x = init_x;
-    enemy.y = init_y + step_y * rand_seed;
+    this.x = init_x;
+    this.y = init_y + step_y * rand_seed;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     if (this.x >= board_x) {
-        init_enemy_position(this);
+        this.init_enemy_position();
     }
     this.x += this.speed * step_x * dt;
-    checkCollision(this);
+    this.checkCollision(game.player);
 };
 
-var checkCollision = function(anEnemy) {
-    if (Math.abs(game.player.x - anEnemy.x) < delta && Math.abs(game.player.y - anEnemy.y) < delta) {
-        console.log('collided');
-        init_player_position(game.player);
+Enemy.prototype.checkCollision = function(player) {
+    if (Math.abs(player.x - this.x) < delta && Math.abs(player.y - this.y) < delta) {
+        player.init_player_position();
     }
 };
 
@@ -50,20 +48,15 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-var init_player_position = function(player) {
-    player.x = init_x + step_x * 2;
-    player.y = bottom_limit;
-};
-
 var Player = function() {
-    init_player_position(this);
+    this.init_player_position();
 
     this.sprite = 'images/char-boy.png';
 };
 
 Player.prototype.update = function(dt) {
     if (this.y < top_limit) {
-        init_player_position(this);
+        this.init_player_position();
         game.create_new_enemy();
     }
     if (this.y >= bottom_limit) {
@@ -75,6 +68,11 @@ Player.prototype.update = function(dt) {
     if (this.x >= board_x) {
         this.x = step_x * 4;
     }
+};
+
+Player.prototype.init_player_position = function() {
+    this.x = init_x + step_x * 2;
+    this.y = bottom_limit;
 };
 
 Player.prototype.render = function() {
