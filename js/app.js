@@ -8,6 +8,7 @@ var board_x = 505;
 var board_y = 606;
 var top_limit = init_y - step_y;
 var bottom_limit = init_y + step_y * 4;
+var delta = init_y;
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -31,7 +32,15 @@ Enemy.prototype.update = function(dt) {
         this.x = -step_x;
     }
     this.x += this.speed * step_x * dt;
+    checkCollision(this);
 };
+
+var checkCollision = function(anEnemy) {
+    if (Math.abs(player.x - anEnemy.x) < delta && Math.abs(player.y - anEnemy.y) < delta) {
+        console.log('collided');
+        init_player_position(player);
+    }
+}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -42,15 +51,24 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
+var init_player_position = function(player) {
+    player.x = init_x + step_x * 2;
+    player.y = bottom_limit;
+}
+
 var Player = function() {
-    this.x = init_x + step_x * 2;
-    this.y = bottom_limit;
+    init_player_position(this);
+    //this.x = init_x + step_x * 2;
+    //this.y = bottom_limit;
 
     this.sprite = 'images/char-boy.png';
 }
 
 Player.prototype.update = function(dt) {
-    if (this.y < top_limit || this.y >= bottom_limit) {
+    if (this.y < top_limit) {
+        init_player_position(this);
+    }
+    if (this.y >= bottom_limit) {
         this.y = bottom_limit;
     }
     if (this.x <= init_x) {
