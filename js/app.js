@@ -6,6 +6,8 @@ var step_x = 101;
 var step_y = 85.5;
 var board_x = 505;
 var board_y = 606;
+var top_limit = init_y - step_y;
+var bottom_limit = init_y + step_y * 4;
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -42,17 +44,17 @@ Enemy.prototype.render = function() {
 
 var Player = function() {
     this.x = init_x + step_x * 2;
-    this.y = init_y + step_y * 4;
+    this.y = bottom_limit;
 
     this.sprite = 'images/char-boy.png';
 }
 
 Player.prototype.update = function(dt) {
-    if (this.y < 0 || this.y > init_y + step_y * 4) {
-        this.y = init_y + step_y * 4;
+    if (this.y < top_limit || this.y >= bottom_limit) {
+        this.y = bottom_limit;
     }
-    if (this.x <= 0) {
-        this.x = 0;
+    if (this.x <= init_x) {
+        this.x = init_x;
     }
     if (this.x >= board_x) {
         this.x = step_x * 4;
@@ -80,6 +82,7 @@ Player.prototype.handleInput = function(key_press) {
         default:
             ;
     }
+    //console.log(this.x, this.y);
 };
 
 // Now instantiate your objects.
