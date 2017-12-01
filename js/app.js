@@ -11,13 +11,9 @@ var bottom_limit = init_y + step_y * 4;
 var delta = init_y;
 
 // Enemies our player must avoid
-var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+var Enemy = function(level) {
     init_enemy_position(this);
-    this.speed = 1;
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+    this.speed = level;
     this.sprite = 'images/enemy-bug.png';
 };
 
@@ -26,14 +22,11 @@ var init_enemy_position = function(enemy) {
     console.log(rand_seed);
     enemy.x = init_x;
     enemy.y = init_y + step_y * rand_seed;
-}
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
     if (this.x >= board_x) {
         init_enemy_position(this);
     }
@@ -42,11 +35,11 @@ Enemy.prototype.update = function(dt) {
 };
 
 var checkCollision = function(anEnemy) {
-    if (Math.abs(player.x - anEnemy.x) < delta && Math.abs(player.y - anEnemy.y) < delta) {
+    if (Math.abs(game.player.x - anEnemy.x) < delta && Math.abs(game.player.y - anEnemy.y) < delta) {
         console.log('collided');
-        init_player_position(player);
+        init_player_position(game.player);
     }
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -60,19 +53,19 @@ Enemy.prototype.render = function() {
 var init_player_position = function(player) {
     player.x = init_x + step_x * 2;
     player.y = bottom_limit;
-}
+};
 
 var Player = function() {
     init_player_position(this);
-    //this.x = init_x + step_x * 2;
-    //this.y = bottom_limit;
 
     this.sprite = 'images/char-boy.png';
-}
+};
 
 Player.prototype.update = function(dt) {
     if (this.y < top_limit) {
         init_player_position(this);
+        game.level += 1;
+        create_new_enemy(game.level);
     }
     if (this.y >= bottom_limit) {
         this.y = bottom_limit;
@@ -112,10 +105,22 @@ Player.prototype.handleInput = function(key_press) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [];
-var player = new Player;
-allEnemies.push(new Enemy);
+var Game = function() {
+  this.allEnemies = [];
+  this.player = new Player;
+  this.level = 1;
+};
 
+Game.prototype.run = function() {
+  create_new_enemy(this.level);
+};
+
+var create_new_enemy = function(level) {
+  game.allEnemies.push(new Enemy(level));
+}
+
+var game = new Game;
+game.run();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -127,5 +132,5 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    game.player.handleInput(allowedKeys[e.keyCode]);
 });
