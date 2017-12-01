@@ -14,13 +14,19 @@ var delta = init_y;
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.x = init_x;
-    this.y = init_y + step_y;
+    init_enemy_position(this);
     this.speed = 1;
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 };
+
+var init_enemy_position = function(enemy) {
+    rand_seed = Math.round(Math.random() * 3 - 0.5);
+    console.log(rand_seed);
+    enemy.x = init_x;
+    enemy.y = init_y + step_y * rand_seed;
+}
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -29,7 +35,7 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     if (this.x >= board_x) {
-        this.x = -step_x;
+        init_enemy_position(this);
     }
     this.x += this.speed * step_x * dt;
     checkCollision(this);
