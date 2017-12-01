@@ -64,8 +64,7 @@ var Player = function() {
 Player.prototype.update = function(dt) {
     if (this.y < top_limit) {
         init_player_position(this);
-        game.level += 1;
-        create_new_enemy(game.level);
+        game.create_new_enemy();
     }
     if (this.y >= bottom_limit) {
         this.y = bottom_limit;
@@ -108,16 +107,18 @@ Player.prototype.handleInput = function(key_press) {
 var Game = function() {
   this.allEnemies = [];
   this.player = new Player;
-  this.level = 1;
+  this.level = 0;
 };
 
 Game.prototype.run = function() {
-  create_new_enemy(this.level);
+  this.create_new_enemy(this.level);
 };
 
-var create_new_enemy = function(level) {
-  game.allEnemies.push(new Enemy(level));
-}
+Game.prototype.create_new_enemy = function() {
+  this.level++;
+  this.allEnemies.push(new Enemy(this.level));
+  document.getElementById('gameLevel').innerHTML = this.level;
+};
 
 var game = new Game;
 game.run();
